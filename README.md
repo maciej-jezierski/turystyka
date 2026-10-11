@@ -2,8 +2,8 @@
 
 Next.js 16 site for a Polish tourist club, hosted on **Vercel** with **Supabase** as the database.
 
-- **Public site** (Polish, white theme): home page, routes (4 variants with difficulty, price, what's included), custom pages, sign-up form.
-- **Sign-up flow**: visitor fills the online form → sees bank-transfer details with a unique title (`TK-2026-0001 Kowalski`) → downloads the declaration PDF, signs it, and sends it **by post**.
+- **Public site** (Polish, white theme): home page, 4 routes (Zwierzęca, Mała, Kopa, Duża) with the number of peaks to climb, a vector illustration and what's included, custom pages, sign-up form.
+- **Sign-up flow**: visitor fills the online form → sees bank-transfer details (one club fee, set in Settings) with a unique title (`TK-2026-0001 Kowalski`) → downloads the declaration PDF, signs it, and sends it **by post**.
 - **Admin panel** (`/admin`): big tiles, large fonts, autosave, preview, recycle bin. Pages are built from simple blocks (heading, text, photo, PDF file, button, route list, "how to sign up").
 - **Sign-ups**: mark as *paid* / *declaration received* / *cancelled*, notes, search, Excel (CSV) export.
 
@@ -31,7 +31,7 @@ Next.js 16 site for a Polish tourist club, hosted on **Vercel** with **Supabase*
 3. **Deploy**. The site is live at `https://<project>.vercel.app`. Every push to the main branch redeploys.
 
 ### 3. First login
-Open `https://<project>.vercel.app/admin`, log in, and go to **Ustawienia** to fill in the club name, address, bank account, and upload the declaration PDF.
+Open `https://<project>.vercel.app/admin`, log in, and go to **Ustawienia** to fill in the club name, address, bank account, the fee, and upload the declaration PDF.
 
 ### Later: own domain
 Buy a `.pl` domain, then Vercel → Project → **Settings → Domains** → add it and follow the DNS instructions.
@@ -40,7 +40,8 @@ Buy a `.pl` domain, then Vercel → Project → **Settings → Domains** → add
 - **Supabase free tier pauses** a project after ~7 days without activity. `vercel.json` defines a daily cron hitting `/api/keepalive` to prevent that.
 - **Vercel Hobby** is for non-commercial use; if the club charges money, consider Vercel Pro.
 - No e-mails are sent yet (that needs a domain). The confirmation page has all the details and a print button; new sign-ups show as a red badge on the admin dashboard.
-- Prices and reference numbers are calculated in the database (`create_registration`), so they can't be tampered with in the browser. Visitors can't read sign-ups (RLS).
+- Route pictures are drawn in code (`src/components/Illustration.tsx`); an uploaded photo replaces the drawing.
+- The fee and reference numbers are calculated in the database (`create_registration`), so they can't be tampered with in the browser. Visitors can't read sign-ups (RLS).
 
 ## Development
 ```bash

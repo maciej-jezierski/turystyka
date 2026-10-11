@@ -5,7 +5,7 @@ import type { Settings } from "@/lib/types";
 import { formatPrice, transferTitle } from "@/lib/utils";
 import { submitSignup, type SignupState } from "./actions";
 
-type RouteOption = { id: string; title: string; price: number };
+type RouteOption = { id: string; title: string };
 
 const inputClass =
   "w-full rounded-lg border-2 border-gray-300 px-4 py-3 text-lg focus:border-accent focus:outline-none";
@@ -23,8 +23,7 @@ export default function SignupForm({
     status: "idle",
   });
   const [routeId, setRouteId] = useState(defaultRouteId);
-  const [people, setPeople] = useState(1);
-  const route = routes.find((r) => r.id === routeId);
+  const fee = Number(settings.fee);
 
   if (state.status === "ok") {
     return <Success state={state} settings={settings} />;
@@ -48,7 +47,7 @@ export default function SignupForm({
           <option value="">— wybierz trasę —</option>
           {routes.map((r) => (
             <option key={r.id} value={r.id}>
-              {r.title} ({formatPrice(r.price)} / os.)
+              {r.title}
             </option>
           ))}
         </select>
@@ -72,20 +71,6 @@ export default function SignupForm({
         </Field>
       </div>
 
-      <Field label="Liczba osób *" htmlFor="people">
-        <input
-          id="people"
-          name="people"
-          type="number"
-          min={1}
-          max={50}
-          required
-          value={people}
-          onChange={(e) => setPeople(Number(e.target.value))}
-          className={`${inputClass} max-w-40`}
-        />
-      </Field>
-
       <Field label="Uwagi (opcjonalnie)" htmlFor="message">
         <textarea id="message" name="message" rows={3} className={inputClass} />
       </Field>
@@ -101,9 +86,9 @@ export default function SignupForm({
         </span>
       </label>
 
-      {route && people > 0 && (
+      {fee > 0 && (
         <p className="rounded-lg bg-muted p-4 text-lg">
-          Do zapłaty: <strong>{formatPrice(route.price * people)}</strong>
+          Opłata: <strong>{formatPrice(fee)}</strong>
         </p>
       )}
 
@@ -150,9 +135,7 @@ function Success({
         <p className="mt-2 text-lg">
           Numer zgłoszenia: <strong>{state.refCode}</strong>
         </p>
-        <p className="text-lg">
-          Trasa: {state.routeTitle}, liczba osób: {state.people}
-        </p>
+        <p className="text-lg">Trasa: {state.routeTitle}</p>
         <p className="mt-2 text-base text-gray-700">
           Zapisz lub wydrukuj tę stronę – znajdziesz tu wszystkie potrzebne informacje.
         </p>
@@ -173,8 +156,12 @@ function Success({
           <dd className="font-mono text-xl font-bold tracking-wide">
             {settings.bank_account || "— numer konta zostanie podany telefonicznie —"}
           </dd>
-          <dt className="text-gray-600">Kwota:</dt>
-          <dd className="text-xl font-bold">{formatPrice(state.amount)}</dd>
+          {state.amount > 0 && (
+            <>
+              <dt className="text-gray-600">Kwota:</dt>
+              <dd className="text-xl font-bold">{formatPrice(state.amount)}</dd>
+            </>
+          )}
           <dt className="text-gray-600">Tytuł przelewu:</dt>
           <dd className="font-mono text-xl font-bold">{title}</dd>
         </dl>

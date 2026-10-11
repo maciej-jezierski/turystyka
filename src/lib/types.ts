@@ -27,11 +27,11 @@ export type Route = {
   title: string;
   slug: string;
   short_description: string;
-  difficulty: number;
+  peaks: number;
   duration: string;
   distance: string;
-  price: number;
   features: string[];
+  illustration: string;
   image_url: string;
   blocks: Block[];
   sort_order: number;
@@ -51,6 +51,7 @@ export type Settings = {
   bank_name: string;
   declaration_pdf_url: string;
   declaration_pdf_name: string;
+  fee: number;
   footer_text: string;
 };
 
@@ -65,7 +66,6 @@ export type Registration = {
   last_name: string;
   email: string;
   phone: string;
-  people: number;
   amount: number;
   message: string;
   status: RegistrationStatus;

@@ -31,6 +31,7 @@ create table if not exists public.settings (
   bank_name text not null default '',
   declaration_pdf_url text not null default '',
   declaration_pdf_name text not null default '',
+  fee numeric(10, 2) not null default 0 check (fee >= 0),
   footer_text text not null default '',
   updated_at timestamptz not null default now()
 );
@@ -60,11 +61,11 @@ create table if not exists public.routes (
   title text not null,
   slug text not null unique,
   short_description text not null default '',
-  difficulty int not null default 1 check (difficulty between 1 and 4),
+  peaks int not null default 0 check (peaks >= 0),
   duration text not null default '',
   distance text not null default '',
-  price numeric(10, 2) not null default 0 check (price >= 0),
   features text[] not null default '{}',
+  illustration text not null default '',
   image_url text not null default '',
   blocks jsonb not null default '[]'::jsonb,
   sort_order int not null default 100,
@@ -86,7 +87,6 @@ create table if not exists public.registrations (
   last_name text not null,
   email text not null,
   phone text not null default '',
-  people int not null default 1 check (people between 1 and 50),
   amount numeric(10, 2) not null default 0,
   message text not null default '',
   status text not null default 'nowe' check (status in ('nowe', 'oplacone', 'anulowane')),
@@ -99,7 +99,7 @@ create table if not exists public.registrations (
 
 create index if not exists registrations_created_idx on public.registrations (created_at desc);
 
--- Zapis z formularza publicznego. Kwotę i numer zgłoszenia liczy baza,
+-- Zapis z formularza publicznego. Kwotę (opłata z ustawień) i numer zgłoszenia liczy baza,
 -- więc nikt nie może ich podmienić w przeglądarce.
 create or replace function public.create_registration(
   p_route_id uuid,
@@ -107,7 +107,6 @@ create or replace function public.create_registration(
   p_last_name text,
   p_email text,
   p_phone text,
-  p_people int,
   p_message text
 )
 returns table (ref_code text, amount numeric, route_title text)
@@ -130,27 +129,25 @@ begin
      or coalesce(trim(p_email), '') = '' then
     raise exception 'Brak wymaganych danych';
   end if;
-  if p_people is null or p_people < 1 or p_people > 50 then
-    raise exception 'Nieprawidłowa liczba osób';
-  end if;
 
   v_code := 'TK-' || to_char(now(), 'YYYY') || '-'
             || lpad(nextval('public.registration_seq')::text, 4, '0');
-  v_amount := r.price * p_people;
+  select fee into v_amount from public.settings where id = 1;
+  v_amount := coalesce(v_amount, 0);
 
   insert into public.registrations
-    (ref_code, route_id, route_title, first_name, last_name, email, phone, people, amount, message)
+    (ref_code, route_id, route_title, first_name, last_name, email, phone, amount, message)
   values
     (v_code, r.id, r.title, left(trim(p_first_name), 100), left(trim(p_last_name), 100),
-     left(trim(p_email), 200), left(trim(coalesce(p_phone, '')), 50), p_people, v_amount,
+     left(trim(p_email), 200), left(trim(coalesce(p_phone, '')), 50), v_amount,
      left(coalesce(p_message, ''), 2000));
 
   return query select v_code, v_amount, r.title;
 end;
 $$;
 
-revoke all on function public.create_registration(uuid, text, text, text, text, int, text) from public;
-grant execute on function public.create_registration(uuid, text, text, text, text, int, text) to anon, authenticated;
+revoke all on function public.create_registration(uuid, text, text, text, text, text) from public;
+grant execute on function public.create_registration(uuid, text, text, text, text, text) to anon, authenticated;
 
 -- ---------- Uprawnienia (RLS) ----------
 alter table public.admins enable row level security;
@@ -219,11 +216,11 @@ select 'O klubie', 'o-klubie', true, 10, true, jsonb_build_array(
 )
 where not exists (select 1 from public.pages where slug = 'o-klubie');
 
-insert into public.routes (title, slug, short_description, difficulty, duration, price, sort_order, published, features)
+insert into public.routes (title, slug, short_description, peaks, illustration, sort_order, published, features)
 select * from (values
-  ('Trasa 1 – dla początkujących', 'trasa-1', 'Spokojna wędrówka dla każdego.', 1, '1 dzień', 100.00, 1, true, array['Przewodnik w formie PDF']),
-  ('Trasa 2 – średnio zaawansowana', 'trasa-2', 'Dłuższa trasa z kilkoma podejściami.', 2, '2 dni', 250.00, 2, true, array['Przewodnik PDF', 'Mapa trasy']),
-  ('Trasa 3 – zaawansowana', 'trasa-3', 'Wymagająca trasa górska.', 3, '3 dni', 450.00, 3, true, array['Przewodnik PDF', 'Mapa trasy', 'Opieka przewodnika']),
-  ('Trasa 4 – ekspercka', 'trasa-4', 'Dla doświadczonych turystów.', 4, '5 dni', 800.00, 4, true, array['Przewodnik PDF', 'Mapa trasy', 'Opieka przewodnika', 'Noclegi'])
-) as v(title, slug, short_description, difficulty, duration, price, sort_order, published, features)
+  ('Zwierzęca', 'zwierzeca', 'Szczyty o zwierzęcych nazwach.', 10, 'zwierzeca', 1, true, array['Przewodnik PDF', 'Książeczka do potwierdzeń']),
+  ('Mała', 'mala', 'Dobra na początek przygody.', 20, 'mala', 2, true, array['Przewodnik PDF', 'Książeczka do potwierdzeń']),
+  ('Kopa', 'kopa', 'Sześćdziesiąt szczytów do zdobycia.', 60, 'kopa', 3, true, array['Przewodnik PDF', 'Książeczka do potwierdzeń']),
+  ('Duża', 'duza', 'Dla wytrwałych zdobywców.', 100, 'duza', 4, true, array['Przewodnik PDF', 'Książeczka do potwierdzeń'])
+) as v(title, slug, short_description, peaks, illustration, sort_order, published, features)
 where not exists (select 1 from public.routes);

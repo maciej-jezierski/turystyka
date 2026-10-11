@@ -112,10 +112,6 @@ function RegistrationCard({ r }: { r: Registration }) {
           <dd className="inline font-semibold">{r.route_title}</dd>
         </div>
         <div>
-          <dt className="inline text-gray-600">Osób: </dt>
-          <dd className="inline font-semibold">{r.people}</dd>
-        </div>
-        <div>
           <dt className="inline text-gray-600">Kwota: </dt>
           <dd className="inline font-semibold">{formatPrice(r.amount)}</dd>
         </div>

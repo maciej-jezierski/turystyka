@@ -16,7 +16,7 @@ export default async function SignupPage({ searchParams }: PageProps<"/zapisy">)
         <p className="text-lg">Obecnie nie prowadzimy zapisów.</p>
       ) : (
         <SignupForm
-          routes={routes.map((r) => ({ id: r.id, title: r.title, price: Number(r.price) }))}
+          routes={routes.map((r) => ({ id: r.id, title: r.title }))}
           defaultRouteId={selected?.id ?? ""}
           settings={settings}
         />

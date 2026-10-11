@@ -31,12 +31,14 @@ export function formatDate(value: string): string {
   }).format(new Date(value));
 }
 
-export const DIFFICULTY_LABELS: Record<number, string> = {
-  1: "Łatwa",
-  2: "Średnia",
-  3: "Trudna",
-  4: "Bardzo trudna",
-};
+// 1 szczyt, 2–4 szczyty, 5+ szczytów (z wyjątkiem 12–14)
+export function peaksLabel(n: number): string {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (n === 1) return "1 szczyt";
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return `${n} szczyty`;
+  return `${n} szczytów`;
+}
 
 export function newId(): string {
   return Math.random().toString(36).slice(2, 10);

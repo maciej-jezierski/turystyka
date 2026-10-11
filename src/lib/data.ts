@@ -22,6 +22,7 @@ const EMPTY_SETTINGS: Settings = {
   bank_name: "",
   declaration_pdf_url: "",
   declaration_pdf_name: "",
+  fee: 0,
   footer_text: "",
 };
 

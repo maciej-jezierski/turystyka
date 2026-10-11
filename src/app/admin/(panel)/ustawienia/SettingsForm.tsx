@@ -42,6 +42,11 @@ export default function SettingsForm({ settings }: { settings: Settings }) {
           placeholder="00 0000 0000 0000 0000 0000 0000"
         />
         <Field label="Nazwa banku (opcjonalnie)" name="bank_name" value={settings.bank_name} />
+        <Field
+          label="Opłata za zapis w zł (0 = bez kwoty)"
+          name="fee"
+          value={String(settings.fee ?? 0).replace(".", ",")}
+        />
       </Section>
 
       <Section title="Deklaracja do podpisania (PDF)">

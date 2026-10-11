@@ -103,11 +103,11 @@ export async function saveRoute(
     title: string;
     slug: string;
     short_description: string;
-    difficulty: number;
+    peaks: number;
     duration: string;
     distance: string;
-    price: number;
     features: string[];
+    illustration: string;
     image_url: string;
     blocks: Block[];
     sort_order: number;
@@ -115,8 +115,9 @@ export async function saveRoute(
   },
 ): Promise<SaveResult> {
   const { supabase } = await requireAdmin();
-  const price = Number(input.price);
-  if (!Number.isFinite(price) || price < 0) return { ok: false, error: "Cena musi być liczbą, np. 250" };
+  const peaks = Number(input.peaks);
+  if (!Number.isInteger(peaks) || peaks < 0)
+    return { ok: false, error: "Liczba szczytów musi być liczbą całkowitą, np. 28" };
   const slug = await uniqueSlug(supabase, "routes", input.slug || input.title, id);
 
   const { error } = await supabase
@@ -125,11 +126,11 @@ export async function saveRoute(
       title: input.title.trim() || "Bez nazwy",
       slug,
       short_description: input.short_description,
-      difficulty: Math.min(4, Math.max(1, Math.round(input.difficulty))),
+      peaks,
       duration: input.duration,
       distance: input.distance,
-      price,
       features: input.features.map((f) => f.trim()).filter(Boolean),
+      illustration: input.illustration,
       image_url: input.image_url,
       blocks: input.blocks,
       sort_order: Math.round(input.sort_order) || 0,
@@ -177,7 +178,10 @@ export async function saveSettings(_prev: SaveResult | null, formData: FormData)
   for (const field of SETTINGS_FIELDS) update[field] = String(formData.get(field) ?? "").trim();
   if (!update.club_name) return { ok: false, error: "Podaj nazwę klubu." };
 
-  const { error } = await supabase.from("settings").update(update).eq("id", 1);
+  const fee = Number(String(formData.get("fee") ?? "0").replace(/\s/g, "").replace(",", ".") || 0);
+  if (!Number.isFinite(fee) || fee < 0) return { ok: false, error: "Opłata musi być liczbą, np. 50" };
+
+  const { error } = await supabase.from("settings").update({ ...update, fee }).eq("id", 1);
   if (error) return { ok: false, error: "Nie udało się zapisać ustawień." };
   revalidatePath("/admin", "layout");
   return { ok: true };

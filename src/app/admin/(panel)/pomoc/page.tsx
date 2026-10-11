@@ -14,6 +14,10 @@ const TOPICS = [
     a: "Kliknij „+ Dodaj blok”, wybierz „Zdjęcie”, a potem „Wybierz zdjęcie” i wskaż plik na komputerze lub w telefonie.",
   },
   {
+    q: "Jak zmienić liczbę szczytów lub rysunek trasy?",
+    a: "Wejdź w „Trasy”, kliknij „Edytuj” przy trasie. Liczbę szczytów wpisz w polu „Liczba szczytów do zdobycia”, a rysunek wybierz klikając na jeden z obrazków.",
+  },
+  {
     q: "Jak zmienić kolejność?",
     a: "Użyj strzałek ⬆ i ⬇ w prawym górnym rogu bloku.",
   },
@@ -31,7 +35,7 @@ const TOPICS = [
   },
   {
     q: "Jak zmienić numer konta lub plik deklaracji?",
-    a: "Wejdź w „Ustawienia”, popraw dane i kliknij „💾 Zapisz ustawienia” na dole.",
+    a: "Wejdź w „Ustawienia” (tam jest też kwota opłaty), popraw dane i kliknij „💾 Zapisz ustawienia” na dole.",
   },
   {
     q: "Usunąłem coś przez pomyłkę!",

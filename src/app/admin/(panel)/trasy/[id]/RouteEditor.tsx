@@ -7,7 +7,7 @@ import SaveBar from "@/components/admin/SaveBar";
 import Toggle from "@/components/admin/Toggle";
 import { useAutosave } from "@/components/admin/useAutosave";
 import type { Route } from "@/lib/types";
-import { DIFFICULTY_LABELS } from "@/lib/utils";
+import Illustration, { ILLUSTRATIONS, type IllustrationKey } from "@/components/Illustration";
 import { saveRoute, trashRoute } from "../../actions";
 
 const inputClass =
@@ -18,11 +18,11 @@ export default function RouteEditor({ route }: { route: Route }) {
     title: route.title,
     slug: route.slug,
     short_description: route.short_description,
-    difficulty: route.difficulty,
+    peaks: String(route.peaks),
     duration: route.duration,
     distance: route.distance,
-    price: String(route.price).replace(".", ","),
     features: route.features.join("\n"),
+    illustration: route.illustration,
     image_url: route.image_url,
     blocks: route.blocks,
     sort_order: route.sort_order,
@@ -33,7 +33,7 @@ export default function RouteEditor({ route }: { route: Route }) {
   const { status, error, saveNow } = useAutosave(form, (v) =>
     saveRoute(route.id, {
       ...v,
-      price: Number(v.price.replace(/\s/g, "").replace(",", ".")),
+      peaks: Number(v.peaks.trim() || 0),
       features: v.features.split("\n"),
     }),
   );
@@ -57,12 +57,12 @@ export default function RouteEditor({ route }: { route: Route }) {
           />
         </Field>
         <div className="grid gap-4 sm:grid-cols-3">
-          <Field label="Cena za osobę (zł)">
+          <Field label="Liczba szczytów do zdobycia">
             <input
-              className={inputClass}
-              inputMode="decimal"
-              value={form.price}
-              onChange={(e) => set({ price: e.target.value })}
+              className={`${inputClass} text-2xl font-bold`}
+              inputMode="numeric"
+              value={form.peaks}
+              onChange={(e) => set({ peaks: e.target.value.replace(/\D/g, "") })}
             />
           </Field>
           <Field label="Czas trwania">
@@ -84,30 +84,7 @@ export default function RouteEditor({ route }: { route: Route }) {
         </div>
       </Section>
 
-      <Section title="Poziom trudności">
-        <div className="grid gap-3 sm:grid-cols-4" role="radiogroup" aria-label="Poziom trudności">
-          {[1, 2, 3, 4].map((level) => (
-            <button
-              key={level}
-              type="button"
-              role="radio"
-              aria-checked={form.difficulty === level}
-              onClick={() => set({ difficulty: level })}
-              className={`rounded-xl border-2 p-4 text-lg font-semibold ${
-                form.difficulty === level
-                  ? "border-accent bg-accent text-white"
-                  : "border-gray-300 bg-white hover:border-accent"
-              }`}
-            >
-              {"●".repeat(level)}
-              {"○".repeat(4 - level)}
-              <span className="block">{DIFFICULTY_LABELS[level]}</span>
-            </button>
-          ))}
-        </div>
-      </Section>
-
-      <Section title="Co obejmuje cena">
+      <Section title="Co obejmuje">
         <Field label="Każda pozycja w osobnej linii">
           <textarea
             className={inputClass}
@@ -119,8 +96,34 @@ export default function RouteEditor({ route }: { route: Route }) {
         </Field>
       </Section>
 
-      <Section title="Zdjęcie główne">
-        <FileUpload kind="image" value={form.image_url} onChange={(image_url) => set({ image_url })} />
+      <Section title="Obrazek trasy">
+        <p className="text-lg text-gray-700">Wybierz rysunek:</p>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" role="radiogroup" aria-label="Rysunek trasy">
+          {(Object.keys(ILLUSTRATIONS) as IllustrationKey[]).map((key) => {
+            const selected = form.illustration === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                role="radio"
+                aria-checked={selected}
+                onClick={() => set({ illustration: key })}
+                className={`overflow-hidden rounded-xl border-4 text-left ${selected ? "border-accent" : "border-transparent hover:border-gray-300"}`}
+              >
+                <Illustration name={key} className="block aspect-[20/11] w-full" />
+                <span className="block bg-white px-3 py-2 text-base font-semibold">
+                  {selected ? "✓ " : ""}
+                  {ILLUSTRATIONS[key].split(" – ")[0]}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        <details className="pt-2">
+          <summary className="cursor-pointer text-lg font-semibold">…albo wgraj własne zdjęcie</summary>
+          <p className="my-2 text-base text-gray-600">Zdjęcie zastąpi rysunek.</p>
+          <FileUpload kind="image" value={form.image_url} onChange={(image_url) => set({ image_url })} />
+        </details>
       </Section>
 
       <Section title="Widoczność">
@@ -134,7 +137,7 @@ export default function RouteEditor({ route }: { route: Route }) {
 
       <div>
         <h2 className="mb-1 text-2xl font-bold">Szczegółowy opis trasy</h2>
-        <p className="mb-3 text-lg text-gray-600">Pojawi się na stronie trasy, pod ceną.</p>
+        <p className="mb-3 text-lg text-gray-600">Pojawi się na stronie trasy, pod obrazkiem.</p>
         <BlockEditor
           blocks={form.blocks}
           onChange={(blocks) => set({ blocks })}

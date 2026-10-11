@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
   if (error) return new NextResponse("Błąd", { status: 500 });
 
   const header = [
-    "Numer", "Data", "Imię", "Nazwisko", "E-mail", "Telefon", "Trasa", "Osób",
+    "Numer", "Data", "Imię", "Nazwisko", "E-mail", "Telefon", "Trasa",
     "Kwota", "Status", "Deklaracja otrzymana", "Data wpłaty", "Uwagi uczestnika", "Notatki",
   ];
   const rows = (data as Registration[]).map((r) => [
@@ -36,7 +36,6 @@ export async function GET(request: NextRequest) {
     r.email,
     r.phone,
     r.route_title,
-    r.people,
     String(r.amount).replace(".", ","),
     STATUS_LABEL[r.status],
     r.declaration_received ? "tak" : "nie",

@@ -3,14 +3,15 @@ import BackLink from "@/components/admin/BackLink";
 import StatusBadge from "@/components/admin/StatusBadge";
 import { requireAdmin } from "@/lib/admin";
 import type { Route } from "@/lib/types";
-import { DIFFICULTY_LABELS, formatPrice } from "@/lib/utils";
+import RouteVisual from "@/components/RouteVisual";
+import { peaksLabel } from "@/lib/utils";
 import { createRoute, restoreRoute } from "../actions";
 
 export default async function RoutesList() {
   const { supabase } = await requireAdmin();
   const { data } = await supabase
     .from("routes")
-    .select("id, title, price, difficulty, published, deleted_at, image_url")
+    .select("id, title, peaks, published, deleted_at, image_url, illustration")
     .order("sort_order")
     .order("title");
   const routes = (data ?? []) as Route[];
@@ -48,16 +49,15 @@ export default async function RoutesList() {
               className="flex flex-wrap items-center justify-between gap-3 rounded-xl border-2 border-line bg-white p-5 no-underline hover:border-accent"
             >
               <span className="flex items-center gap-4">
-                {r.image_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={r.image_url} alt="" className="h-16 w-24 rounded-lg object-cover" />
+                {r.image_url || r.illustration ? (
+                  <RouteVisual route={r} className="block h-16 w-24 shrink-0 overflow-hidden rounded-lg" />
                 ) : (
-                  <span className="flex h-16 w-24 items-center justify-center rounded-lg bg-muted text-3xl">🥾</span>
+                  <span className="flex h-16 w-24 items-center justify-center rounded-lg bg-muted text-3xl">⛰</span>
                 )}
                 <span>
                   <span className="block text-xl font-bold text-gray-900">{r.title}</span>
                   <span className="text-base text-gray-600">
-                    {formatPrice(r.price)} · {DIFFICULTY_LABELS[r.difficulty]}
+                    {peaksLabel(r.peaks)} do zdobycia
                   </span>
                 </span>
               </span>
