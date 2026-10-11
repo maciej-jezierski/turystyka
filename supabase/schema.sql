@@ -202,10 +202,14 @@ create policy "pliki_admin_delete" on storage.objects for delete to authenticate
 -- ---------- Przykładowa treść (tylko przy pierwszym uruchomieniu) ----------
 insert into public.pages (title, slug, is_home, show_in_menu, menu_order, published, blocks)
 select 'Strona główna', 'start', true, false, 0, true, jsonb_build_array(
-  jsonb_build_object('id', 'b1', 'type', 'heading', 'text', 'Witamy w naszym klubie turystycznym'),
-  jsonb_build_object('id', 'b2', 'type', 'text', 'text',
-    'Organizujemy wspólne wędrówki po najpiękniejszych zakątkach Polski. Wybierz jedną z naszych tras i zapisz się już dziś.'),
-  jsonb_build_object('id', 'b3', 'type', 'routes')
+  jsonb_build_object('id', 'b1', 'type', 'hero',
+    'title', 'Zdobywaj szczyty razem z nami',
+    'text', 'Wspólne wędrówki po najpiękniejszych górach Polski. Wybierz wariant, zbieraj szczyty i odbierz odznakę.',
+    'buttonLabel', 'Zapisz się', 'buttonHref', '/zapisy'),
+  jsonb_build_object('id', 'b2', 'type', 'heading', 'text', 'Wybierz swoją trasę'),
+  jsonb_build_object('id', 'b3', 'type', 'text', 'text', 'Cztery warianty – od kilku do stu szczytów do zdobycia.'),
+  jsonb_build_object('id', 'b4', 'type', 'routes'),
+  jsonb_build_object('id', 'b5', 'type', 'signup')
 )
 where not exists (select 1 from public.pages);
 

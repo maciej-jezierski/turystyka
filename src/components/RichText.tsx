@@ -20,7 +20,7 @@ export default function RichText({ text }: { text: string }) {
   return (
     <>
       {paragraphs.map((p, i) => (
-        <p key={i} className="mb-4 leading-relaxed text-gray-800 last:mb-0">
+        <p key={i} className="mb-4 leading-relaxed text-slate-600 last:mb-0">
           {p.split("\n").map((line, j) => (
             <Fragment key={j}>
               {j > 0 && <br />}

@@ -24,16 +24,16 @@ export default async function Dashboard() {
 
   return (
     <div>
-      <h1 className="mb-2 text-3xl font-bold">Dzień dobry!</h1>
+      <h1 className="mb-2 text-4xl font-extrabold">Dzień dobry! 👋</h1>
       <p className="mb-8 text-lg text-gray-700">Co chcesz dzisiaj zrobić?</p>
       <div className="grid gap-5 sm:grid-cols-2">
         {tiles.map((t) => (
           <Link
             key={t.href}
             href={t.href}
-            className="relative flex items-center gap-5 rounded-2xl border-2 border-line bg-white p-6 no-underline shadow-sm transition hover:border-accent hover:shadow-md"
+            className="group relative flex items-center gap-5 rounded-3xl border border-line bg-white p-6 no-underline shadow-soft transition hover:-translate-y-0.5 hover:border-accent hover:shadow-lift"
           >
-            <span className="text-5xl" aria-hidden>
+            <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-accent-soft text-4xl" aria-hidden>
               {t.icon}
             </span>
             <span>

@@ -13,7 +13,7 @@ export default async function PreviewLayout({ children }: LayoutProps<"/admin/po
         👁 To jest podgląd. Zamknij tę kartę, aby wrócić do edycji.
       </div>
       <SiteHeader />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10">{children}</main>
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 sm:py-12">{children}</main>
       <SiteFooter />
     </>
   );

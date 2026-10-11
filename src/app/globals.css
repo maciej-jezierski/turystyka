@@ -2,25 +2,37 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #1f2937;
+  --foreground: #1e293b;
+  --ink: #0f172a;
   --accent: #166534;
   --accent-hover: #14532d;
-  --muted: #f8faf9;
-  --border: #e5e7eb;
+  --accent-soft: #ecf5ef;
+  --accent-bright: #22c55e;
+  --sun: #f5c451;
+  --muted: #f7f9f8;
+  --border: #e6ebe8;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-bright: var(--accent-bright);
+  --color-sun: var(--sun);
   --color-muted: var(--muted);
   --color-line: var(--border);
   --font-sans: var(--font-inter);
+  --font-display: var(--font-jakarta);
+  --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.04), 0 24px 48px -16px rgb(22 101 52 / 0.25);
 }
 
 html {
   font-size: 18px;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -28,14 +40,82 @@ body {
   color: var(--foreground);
 }
 
+h1,
+h2,
+h3 {
+  font-family: var(--font-jakarta), sans-serif;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
 a {
   text-underline-offset: 3px;
 }
 
-/* Wyraźna obwódka przy nawigacji klawiaturą */
 :focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* Wspólne style przycisków */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 150ms, color 150ms, transform 150ms, box-shadow 150ms;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 8px 20px -8px rgb(22 101 52 / 0.6);
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+.btn-secondary {
+  background: #fff;
+  color: var(--ink);
+  border: 1.5px solid var(--border);
+}
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.btn-ghost {
+  color: var(--accent);
+  padding-left: 0;
+  padding-right: 0;
+}
+.btn-ghost:hover {
+  text-decoration: underline;
+}
+
+/* Pola formularzy */
+.field {
+  width: 100%;
+  border-radius: 0.875rem;
+  border: 1.5px solid var(--border);
+  background: var(--muted);
+  padding: 0.85rem 1rem;
+  font-size: 1.05rem;
+  transition: border-color 150ms, background-color 150ms, box-shadow 150ms;
+}
+.field:hover {
+  border-color: #cbd5d0;
+}
+.field:focus {
+  outline: none;
+  background: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgb(22 101 52 / 0.12);
 }
 
 @media print {
@@ -45,3 +125,4 @@ a {
     display: none !important;
   }
 }
+

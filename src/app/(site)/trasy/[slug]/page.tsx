@@ -19,39 +19,63 @@ export default async function RoutePage({ params }: PageProps<"/trasy/[slug]">) 
   if (!route) notFound();
 
   return (
-    <div className="space-y-10">
-      <Link href="/trasy" className="text-accent underline">
-        ← Wszystkie trasy
-      </Link>
-      <div className="grid gap-8 md:grid-cols-[1fr_320px]">
-        <div className="space-y-4">
-          <h1 className="text-4xl font-bold text-gray-900">{route.title}</h1>
-          {route.short_description && <p className="text-xl text-gray-700">{route.short_description}</p>}
-          <RouteVisual route={route} className="block aspect-[20/11] w-full rounded-2xl" />
-        </div>
-        <aside className="h-fit space-y-4 rounded-2xl border border-line p-6 shadow-sm">
-          <Peaks count={route.peaks} large />
-          {route.duration && <p>⏱ {route.duration}</p>}
-          {route.distance && <p>🥾 {route.distance}</p>}
-          {route.features.length > 0 && (
-            <ul className="space-y-1">
-              {route.features.map((f) => (
-                <li key={f}>
-                  <span className="text-accent">✓</span> {f}
-                </li>
-              ))}
-            </ul>
+    <div className="space-y-14">
+      <div>
+        <Link href="/trasy" className="text-base font-semibold text-slate-500 no-underline hover:text-accent">
+          ← Wszystkie trasy
+        </Link>
+        <h1 className="mt-4 text-4xl font-extrabold sm:text-6xl">{route.title}</h1>
+        {route.short_description && (
+          <p className="mt-4 max-w-2xl text-lg text-slate-600 sm:text-xl">{route.short_description}</p>
+        )}
+      </div>
+
+      <div className="grid items-start gap-8 lg:grid-cols-[1fr_360px]">
+        <RouteVisual route={route} className="block aspect-[20/11] w-full overflow-hidden rounded-[2rem] shadow-soft" />
+        <aside className="space-y-6 rounded-[2rem] border border-line bg-white p-7 shadow-soft lg:sticky lg:top-24">
+          <Peaks count={route.peaks} />
+          {(route.duration || route.distance) && (
+            <dl className="grid grid-cols-2 gap-3">
+              {route.duration && <Info label="Czas" value={route.duration} />}
+              {route.distance && <Info label="Długość" value={route.distance} />}
+            </dl>
           )}
-          <Link
-            href={`/zapisy?trasa=${route.slug}`}
-            className="block rounded-lg bg-accent px-5 py-3 text-center text-lg font-semibold text-white no-underline hover:bg-accent-hover"
-          >
-            Zapisz się
+          {route.features.length > 0 && (
+            <div>
+              <h2 className="mb-3 text-sm font-bold uppercase tracking-wider text-slate-500">W pakiecie</h2>
+              <ul className="space-y-2">
+                {route.features.map((f) => (
+                  <li key={f} className="flex items-start gap-3">
+                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-sm text-accent" aria-hidden>
+                      ✓
+                    </span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <Link href={`/zapisy?trasa=${route.slug}`} className="btn btn-primary w-full py-4 text-lg">
+            Zapisz się na tę trasę →
           </Link>
         </aside>
       </div>
-      {route.blocks.length > 0 && <Blocks blocks={route.blocks} />}
+
+      {route.blocks.length > 0 && (
+        <div className="max-w-3xl">
+          <Blocks blocks={route.blocks} />
+        </div>
+      )}
       <SignupInfo />
+    </div>
+  );
+}
+
+function Info({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-muted p-3">
+      <dt className="text-sm text-slate-500">{label}</dt>
+      <dd className="font-semibold text-ink">{value}</dd>
     </div>
   );
 }

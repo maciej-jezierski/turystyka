@@ -1,4 +1,5 @@
 export type Block =
+  | { id: string; type: "hero"; title: string; text: string; buttonLabel: string; buttonHref: string }
   | { id: string; type: "heading"; text: string }
   | { id: string; type: "text"; text: string }
   | { id: string; type: "image"; url: string; caption: string }

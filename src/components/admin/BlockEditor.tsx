@@ -6,6 +6,7 @@ import { newId } from "@/lib/utils";
 import FileUpload from "./FileUpload";
 
 const BLOCK_INFO: Record<BlockType, { icon: string; name: string; hint: string }> = {
+  hero: { icon: "🏔", name: "Baner powitalny", hint: "Duży tytuł z rysunkiem gór i przyciskiem" },
   heading: { icon: "🔤", name: "Nagłówek", hint: "Duży tytuł sekcji" },
   text: { icon: "📝", name: "Tekst", hint: "Zwykły tekst, akapity" },
   image: { icon: "🖼", name: "Zdjęcie", hint: "Zdjęcie z komputera lub telefonu" },
@@ -15,11 +16,13 @@ const BLOCK_INFO: Record<BlockType, { icon: string; name: string; hint: string }
   signup: { icon: "✍️", name: "Jak się zapisać", hint: "Instrukcja zapisu, deklaracja PDF i adres" },
 };
 
-const ORDER: BlockType[] = ["heading", "text", "image", "file", "button", "routes", "signup"];
+const ORDER: BlockType[] = ["hero", "heading", "text", "image", "file", "button", "routes", "signup"];
 
 function emptyBlock(type: BlockType): Block {
   const id = newId();
   switch (type) {
+    case "hero":
+      return { id, type, title: "", text: "", buttonLabel: "Zapisz się", buttonHref: "/zapisy" };
     case "heading":
     case "text":
       return { id, type, text: "" };
@@ -131,6 +134,48 @@ export default function BlockEditor({
 
 function BlockFields({ block, onChange }: { block: Block; onChange: (b: Block) => void }) {
   switch (block.type) {
+    case "hero":
+      return (
+        <div className="space-y-3">
+          <label className="block">
+            <span className="mb-1 block font-semibold">Duży tytuł</span>
+            <input
+              className={`${inputClass} text-2xl font-bold`}
+              value={block.title}
+              placeholder="np. Zdobywaj szczyty razem z nami"
+              onChange={(e) => onChange({ ...block, title: e.target.value })}
+            />
+          </label>
+          <label className="block">
+            <span className="mb-1 block font-semibold">Tekst pod tytułem</span>
+            <textarea
+              className={inputClass}
+              rows={3}
+              value={block.text}
+              onChange={(e) => onChange({ ...block, text: e.target.value })}
+            />
+          </label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block">
+              <span className="mb-1 block font-semibold">Napis na przycisku</span>
+              <input
+                className={inputClass}
+                value={block.buttonLabel}
+                onChange={(e) => onChange({ ...block, buttonLabel: e.target.value })}
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1 block font-semibold">Dokąd prowadzi przycisk</span>
+              <input
+                className={inputClass}
+                value={block.buttonHref}
+                placeholder="/zapisy"
+                onChange={(e) => onChange({ ...block, buttonHref: e.target.value })}
+              />
+            </label>
+          </div>
+        </div>
+      );
     case "heading":
       return (
         <input

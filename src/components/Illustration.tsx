@@ -54,15 +54,15 @@ function Mala() {
 
 function Duza() {
   return (
-    <>
-      <circle cx="70" cy="55" r="22" fill={SUN} />
+    <g transform="translate(0 28)">
+      <circle cx="330" cy="30" r="22" fill={SUN} />
       <path d="M-20 220 L90 110 L150 160 L210 120 L300 220Z" fill={FAR} />
       <path d="M90 220 L230 40 L370 220Z" fill={MID} />
       <path d="M230 40 L262 81 L246 76 L232 92 L218 76 L200 80Z" fill={SNOW} />
       <path d="M260 220 L340 120 L420 220Z" fill={FAR} />
       <path d="M0 200 Q100 185 200 200 T400 198 V220 H0Z" fill={NEAR} />
       <path d="M228 40 V18 L246 25 L228 31" fill="none" stroke={NEAR} strokeWidth="3" strokeLinejoin="round" />
-    </>
+    </g>
   );
 }
 
