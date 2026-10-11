@@ -12,12 +12,12 @@ export default async function SignupPage({ searchParams }: PageProps<"/zapisy">)
 
   return (
     <div className="mx-auto max-w-3xl space-y-10">
-      <PageHeader eyebrow="Zapisy" title="Dołącz do nas" text="Wypełnij krótki formularz – resztę wyjaśnimy krok po kroku." />
+      <PageHeader title="Zapisy" text="Wybierz trasę i podaj swoje dane. Po wysłaniu zobaczysz dane do przelewu i adres do wysłania deklaracji." />
       {routes.length === 0 ? (
         <p className="text-lg">Obecnie nie prowadzimy zapisów.</p>
       ) : (
         <SignupForm
-          routes={routes.map((r) => ({ id: r.id, title: r.title, peaks: r.peaks }))}
+          routes={routes.map((r) => ({ id: r.id, title: r.title, peaks: r.peaks, trail_color: r.trail_color }))}
           defaultRouteId={selected?.id ?? ""}
           settings={settings}
         />

@@ -12,15 +12,15 @@ export default async function SiteHeader() {
   ];
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line/70 bg-white/80 backdrop-blur-lg">
+    <header className="sticky top-0 z-30 border-b border-line bg-white">
       <div className="relative mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link href="/" className="flex items-center gap-3 no-underline">
           <Logo />
           <span className="leading-tight">
-            <span className="block font-display text-lg font-bold text-ink">{settings.club_name}</span>
-            {settings.tagline && (
-              <span className="hidden text-sm text-slate-500 sm:block">{settings.tagline}</span>
-            )}
+            <span className="block font-display text-xl font-extrabold text-ink [font-stretch:75%]">
+              {settings.club_name}
+            </span>
+            {settings.tagline && <span className="hidden text-sm text-ink-soft sm:block">{settings.tagline}</span>}
           </span>
         </Link>
         <SiteNav links={links} />

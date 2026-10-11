@@ -8,6 +8,8 @@ import Toggle from "@/components/admin/Toggle";
 import { useAutosave } from "@/components/admin/useAutosave";
 import type { Route } from "@/lib/types";
 import Illustration, { ILLUSTRATIONS, type IllustrationKey } from "@/components/Illustration";
+import TrailMark from "@/components/TrailMark";
+import { TRAIL_COLORS, type TrailColor } from "@/lib/trail";
 import { saveRoute, trashRoute } from "../../actions";
 
 const inputClass =
@@ -23,6 +25,7 @@ export default function RouteEditor({ route }: { route: Route }) {
     distance: route.distance,
     features: route.features.join("\n"),
     illustration: route.illustration,
+    trail_color: route.trail_color,
     image_url: route.image_url,
     blocks: route.blocks,
     sort_order: route.sort_order,
@@ -81,6 +84,29 @@ export default function RouteEditor({ route }: { route: Route }) {
               onChange={(e) => set({ distance: e.target.value })}
             />
           </Field>
+        </div>
+      </Section>
+
+      <Section title="Kolor szlaku">
+        <p className="text-lg text-gray-700">Kolor oznacza tę trasę na całej stronie.</p>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5" role="radiogroup" aria-label="Kolor szlaku">
+          {(Object.keys(TRAIL_COLORS) as TrailColor[]).map((key) => {
+            const selected = form.trail_color === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                role="radio"
+                aria-checked={selected}
+                onClick={() => set({ trail_color: key })}
+                className={`flex items-center gap-3 rounded-xl border-4 bg-white p-3 text-lg font-semibold ${selected ? "border-accent" : "border-gray-200 hover:border-gray-300"}`}
+              >
+                <TrailMark color={key} className="h-10 w-10" />
+                {selected ? "✓ " : ""}
+                {TRAIL_COLORS[key].name}
+              </button>
+            );
+          })}
         </div>
       </Section>
 

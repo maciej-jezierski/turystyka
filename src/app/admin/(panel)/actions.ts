@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import type { Block, RegistrationStatus } from "@/lib/types";
+import { TRAIL_COLORS } from "@/lib/trail";
 import { RESERVED_SLUGS, slugify } from "@/lib/utils";
 
 export type SaveResult = { ok: true } | { ok: false; error: string };
@@ -108,6 +109,7 @@ export async function saveRoute(
     distance: string;
     features: string[];
     illustration: string;
+    trail_color: string;
     image_url: string;
     blocks: Block[];
     sort_order: number;
@@ -131,6 +133,7 @@ export async function saveRoute(
       distance: input.distance,
       features: input.features.map((f) => f.trim()).filter(Boolean),
       illustration: input.illustration,
+      trail_color: input.trail_color in TRAIL_COLORS ? input.trail_color : "zielony",
       image_url: input.image_url,
       blocks: input.blocks,
       sort_order: Math.round(input.sort_order) || 0,

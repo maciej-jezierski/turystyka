@@ -11,9 +11,8 @@ export default async function RoutesPage() {
   return (
     <div className="space-y-14">
       <PageHeader
-        eyebrow="Nasze trasy"
-        title="Wybierz swoje wyzwanie"
-        text="Każdy wariant to inna liczba szczytów do zdobycia. Zacznij od mniejszego albo od razu sięgnij wyżej."
+        title="Trasy"
+        text="Cztery warianty różnią się liczbą szczytów do zdobycia. Kolor znaku szlaku oznacza wariant w całym serwisie."
       />
       {routes.length === 0 ? (
         <p className="text-lg">Wkrótce pojawią się tu nowe trasy.</p>

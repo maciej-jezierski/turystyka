@@ -75,6 +75,12 @@ create table if not exists public.routes (
   updated_at timestamptz not null default now()
 );
 
+-- Kolor szlaku wariantu (dodane później – bezpieczne do ponownego uruchomienia)
+alter table public.routes add column if not exists trail_color text not null default 'zielony';
+alter table public.routes drop constraint if exists routes_trail_color_check;
+alter table public.routes add constraint routes_trail_color_check
+  check (trail_color in ('czerwony', 'niebieski', 'zielony', 'zolty', 'czarny'));
+
 -- ---------- Zapisy ----------
 create sequence if not exists public.registration_seq;
 
@@ -220,11 +226,11 @@ select 'O klubie', 'o-klubie', true, 10, true, jsonb_build_array(
 )
 where not exists (select 1 from public.pages where slug = 'o-klubie');
 
-insert into public.routes (title, slug, short_description, peaks, illustration, sort_order, published, features)
+insert into public.routes (title, slug, short_description, peaks, illustration, trail_color, sort_order, published, features)
 select * from (values
-  ('Zwierzęca', 'zwierzeca', 'Szczyty o zwierzęcych nazwach.', 10, 'zwierzeca', 1, true, array['Przewodnik PDF', 'Książeczka do potwierdzeń']),
-  ('Mała', 'mala', 'Dobra na początek przygody.', 20, 'mala', 2, true, array['Przewodnik PDF', 'Książeczka do potwierdzeń']),
-  ('Kopa', 'kopa', 'Sześćdziesiąt szczytów do zdobycia.', 60, 'kopa', 3, true, array['Przewodnik PDF', 'Książeczka do potwierdzeń']),
-  ('Duża', 'duza', 'Dla wytrwałych zdobywców.', 100, 'duza', 4, true, array['Przewodnik PDF', 'Książeczka do potwierdzeń'])
-) as v(title, slug, short_description, peaks, illustration, sort_order, published, features)
+  ('Zwierzęca', 'zwierzeca', 'Szczyty o zwierzęcych nazwach.', 10, 'zwierzeca', 'zielony', 1, true, array['Przewodnik PDF', 'Książeczka do potwierdzeń']),
+  ('Mała', 'mala', 'Dobra na początek przygody.', 20, 'mala', 'niebieski', 2, true, array['Przewodnik PDF', 'Książeczka do potwierdzeń']),
+  ('Kopa', 'kopa', 'Sześćdziesiąt szczytów do zdobycia.', 60, 'kopa', 'zolty', 3, true, array['Przewodnik PDF', 'Książeczka do potwierdzeń']),
+  ('Duża', 'duza', 'Dla wytrwałych zdobywców.', 100, 'duza', 'czerwony', 4, true, array['Przewodnik PDF', 'Książeczka do potwierdzeń'])
+) as v(title, slug, short_description, peaks, illustration, trail_color, sort_order, published, features)
 where not exists (select 1 from public.routes);

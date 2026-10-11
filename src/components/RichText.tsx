@@ -5,7 +5,7 @@ const URL_RE = /(https?:\/\/[^\s]+)/g;
 function Linkify({ text }: { text: string }) {
   return text.split(URL_RE).map((part, i) =>
     /^https?:\/\//.test(part) ? (
-      <a key={i} href={part} className="text-accent underline" target="_blank" rel="noreferrer">
+      <a key={i} href={part} className="font-bold text-accent underline" target="_blank" rel="noreferrer">
         {part}
       </a>
     ) : (
@@ -20,7 +20,7 @@ export default function RichText({ text }: { text: string }) {
   return (
     <>
       {paragraphs.map((p, i) => (
-        <p key={i} className="mb-4 leading-relaxed text-slate-600 last:mb-0">
+        <p key={i} className="mb-4 max-w-[65ch] leading-relaxed text-ink-soft last:mb-0">
           {p.split("\n").map((line, j) => (
             <Fragment key={j}>
               {j > 0 && <br />}

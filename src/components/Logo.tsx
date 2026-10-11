@@ -1,10 +1,9 @@
+// Znak klubu: znak szlaku w kolorze świerku.
 export default function Logo({ className = "h-10 w-10" }: { className?: string }) {
   return (
     <svg viewBox="0 0 40 40" className={className} aria-hidden>
-      <rect width="40" height="40" rx="12" fill="#166534" />
-      <circle cx="29" cy="12" r="4" fill="#f5c451" />
-      <path d="M6 31 L16 15 L21 22 L25 17 L34 31Z" fill="#ffffff" />
-      <path d="M16 15 L19 19.8 L17 19.2 L15.4 20.6 L14 19Z" fill="#bcdcc5" />
+      <rect x="1" y="1" width="38" height="38" rx="4" fill="#fff" stroke="#17251d" strokeWidth="2" />
+      <rect x="2" y="13.5" width="36" height="13" fill="#1f5134" />
     </svg>
   );
 }

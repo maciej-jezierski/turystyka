@@ -4,6 +4,7 @@ import StatusBadge from "@/components/admin/StatusBadge";
 import { requireAdmin } from "@/lib/admin";
 import type { Route } from "@/lib/types";
 import RouteVisual from "@/components/RouteVisual";
+import TrailMark from "@/components/TrailMark";
 import { peaksLabel } from "@/lib/utils";
 import { createRoute, restoreRoute } from "../actions";
 
@@ -11,7 +12,7 @@ export default async function RoutesList() {
   const { supabase } = await requireAdmin();
   const { data } = await supabase
     .from("routes")
-    .select("id, title, peaks, published, deleted_at, image_url, illustration")
+    .select("id, title, peaks, published, deleted_at, image_url, illustration, trail_color")
     .order("sort_order")
     .order("title");
   const routes = (data ?? []) as Route[];
@@ -55,7 +56,7 @@ export default async function RoutesList() {
                   <span className="flex h-16 w-24 items-center justify-center rounded-lg bg-muted text-3xl">⛰</span>
                 )}
                 <span>
-                  <span className="block text-xl font-bold text-gray-900">{r.title}</span>
+                  <span className="flex items-center gap-2 text-xl font-bold text-gray-900"><TrailMark color={r.trail_color} />{r.title}</span>
                   <span className="text-base text-gray-600">
                     {peaksLabel(r.peaks)} do zdobycia
                   </span>

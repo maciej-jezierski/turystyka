@@ -37,7 +37,7 @@ async function BlockView({ block }: { block: Block }) {
       return <Hero block={block} />;
     case "heading":
       return block.text ? (
-        <h2 className="max-w-3xl text-3xl font-extrabold sm:text-4xl">{block.text}</h2>
+        <h2 className="max-w-3xl text-4xl sm:text-5xl">{block.text}</h2>
       ) : null;
     case "text":
       return (
@@ -50,9 +50,9 @@ async function BlockView({ block }: { block: Block }) {
       return (
         <figure>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={block.url} alt={block.caption} className="w-full rounded-3xl shadow-soft" />
+          <img src={block.url} alt={block.caption} className="w-full rounded-lg" />
           {block.caption && (
-            <figcaption className="mt-3 text-center text-base text-slate-500">{block.caption}</figcaption>
+            <figcaption className="mt-2 text-base text-ink-soft">{block.caption}</figcaption>
           )}
         </figure>
       );
@@ -63,23 +63,22 @@ async function BlockView({ block }: { block: Block }) {
           href={block.url}
           target="_blank"
           rel="noreferrer"
-          className="group flex max-w-xl items-center gap-4 rounded-2xl border border-line bg-white p-4 no-underline shadow-soft transition hover:border-accent"
+          className="flex max-w-xl items-center gap-4 rounded-lg border-2 border-line bg-white p-4 no-underline hover:border-ink"
         >
-          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-red-50 text-sm font-bold text-red-700">
+          <span className="flex h-14 w-12 shrink-0 items-center justify-center rounded-sm border-2 border-ink text-sm font-bold text-ink">
             PDF
           </span>
           <span className="flex-1">
-            <span className="block font-semibold text-ink">{block.label || "Pobierz plik"}</span>
-            <span className="text-sm text-slate-500">Kliknij, aby otworzyć lub pobrać</span>
+            <span className="block font-bold text-ink">{block.label || "Pobierz plik"}</span>
+            <span className="text-sm text-ink-soft">Otwórz lub pobierz plik</span>
           </span>
-          <span aria-hidden className="text-xl text-accent transition group-hover:translate-x-1">↓</span>
         </a>
       );
     case "button":
       if (!block.href) return null;
       return (
-        <Link href={block.href} className="btn btn-primary px-7 py-3.5 text-lg">
-          {block.label || "Dalej"} <span aria-hidden>→</span>
+        <Link href={block.href} className="btn btn-primary px-7 text-lg">
+          {block.label || "Dalej"}
         </Link>
       );
     case "routes": {

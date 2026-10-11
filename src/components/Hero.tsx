@@ -1,55 +1,34 @@
 import Link from "next/link";
 import { getRoutes } from "@/lib/data";
 import type { Block } from "@/lib/types";
-import HeroIllustration from "./HeroIllustration";
+import Contours from "./Contours";
+import Signpost from "./Signpost";
 
 export default async function Hero({ block }: { block: Extract<Block, { type: "hero" }> }) {
   const routes = await getRoutes();
-  const totalPeaks = routes.reduce((sum, r) => sum + r.peaks, 0);
 
   return (
-    <section className="relative overflow-hidden rounded-[2rem] border border-line bg-gradient-to-br from-accent-soft via-white to-white px-6 py-10 sm:px-10 sm:py-14">
-      <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
+    <section className="relative isolate">
+      <Contours className="pointer-events-none absolute inset-y-[-3rem] right-[-4rem] z-0 hidden h-[calc(100%+6rem)] w-[70%] lg:block" />
+      <div className="relative z-10 grid items-center gap-14 py-4 lg:grid-cols-[1.05fr_1fr] lg:py-10">
         <div>
-          <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-accent shadow-soft">
-            <span className="h-2 w-2 rounded-full bg-accent-bright" aria-hidden />
-            Zapisy otwarte
-          </span>
-          <h1 className="mt-5 text-4xl font-extrabold leading-[1.1] sm:text-5xl lg:text-6xl">
-            {block.title || "Witamy w klubie"}
-          </h1>
-          {block.text && (
-            <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-600 sm:text-xl">{block.text}</p>
-          )}
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl">{block.title || "Witamy w klubie"}</h1>
+          {block.text && <p className="mt-6 max-w-[34ch] text-xl text-ink-soft">{block.text}</p>}
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href={block.buttonHref || "/zapisy"} className="btn btn-primary px-7 py-3.5 text-lg">
-              {block.buttonLabel || "Zapisz się"} <span aria-hidden>→</span>
+            <Link href={block.buttonHref || "/zapisy"} className="btn btn-primary px-7 text-lg">
+              {block.buttonLabel || "Zapisz się"}
             </Link>
-            <Link href="/trasy" className="btn btn-secondary px-7 py-3.5 text-lg">
-              Zobacz trasy
+            <Link href="/trasy" className="btn btn-secondary px-7 text-lg">
+              Porównaj trasy
             </Link>
           </div>
-          {routes.length > 0 && (
-            <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
-              <Stat value={routes.length} label={routes.length === 1 ? "trasa" : routes.length < 5 ? "trasy" : "tras"} />
-              <Stat value={totalPeaks} label="szczytów łącznie" />
-            </dl>
-          )}
         </div>
-        <HeroIllustration className="w-full drop-shadow-xl" />
+        {routes.length > 0 && (
+          <div className="pb-8">
+            <Signpost routes={routes} />
+          </div>
+        )}
       </div>
     </section>
-  );
-}
-
-function Stat({ value, label }: { value: number; label: string }) {
-  return (
-    <div>
-      <dt className="sr-only">{label}</dt>
-      <dd>
-        <span className="block font-display text-4xl font-extrabold text-accent">{value}</span>
-        <span className="text-slate-600">{label}</span>
-      </dd>
-    </div>
   );
 }

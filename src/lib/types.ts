@@ -33,6 +33,7 @@ export type Route = {
   distance: string;
   features: string[];
   illustration: string;
+  trail_color: string;
   image_url: string;
   blocks: Block[];
   sort_order: number;
